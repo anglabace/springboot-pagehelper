@@ -1,0 +1,5 @@
+/mybatis-web/target
+/mybatis-service/target
+/mybatis-domain/target
+/mybatis-dao/target
+/.idea

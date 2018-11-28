@@ -1,0 +1,45 @@
+# 默认的 jsp 返回目录
+spring:
+  # mongodb3 配置
+  datasource:
+    url: ${msql.url}
+    driver-class-name: com.mysql.jdbc.Driver
+    username: ${msql.username}
+    password: ${msql.password}
+
+  # 不使用模板缓存
+  thymeleaf:
+    cache: false
+
+
+
+
+#pagehelper分页插件配置
+pagehelper:
+  helperDialect: mysql
+  reasonable: true
+  supportMethodsArguments: true
+  params: count=countSql
+
+
+
+mybatis:
+  type-aliases-package: com.xiao.domain.dto
+  mapper-locations: classpath:mapper/*Mapper.xml
+
+
+# 设置页面中显示数据条数
+page:
+  pageSize: 10
+
+
+
+
+
+
+
+
+
+
+
+
