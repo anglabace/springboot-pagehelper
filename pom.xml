@@ -205,7 +205,7 @@
 
     <build>
         <resources>
-            <!-- 解决layui图标不显示问题 -->
+            <!-- 解决layui图标不显示问题 https://fly.layui.com/jie/45910/-->
             <resource>
                 <directory>src/main/resources</directory>
                 <filtering>true</filtering>
