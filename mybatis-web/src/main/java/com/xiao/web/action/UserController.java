@@ -9,7 +9,6 @@ import com.xiao.service.UserService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
-import io.swagger.models.auth.In;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -17,6 +16,7 @@ import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
 import springfox.documentation.annotations.ApiIgnore;
 
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -36,7 +36,7 @@ public class UserController {
 
     @ApiOperation(value = "查询所有用户")
     @RequestMapping(value = "/getUserList", method = RequestMethod.GET, produces = "application/json;charset=UTF-8")
-    public String getUserList(@ApiIgnore ModelMap map, @RequestParam(defaultValue = "1") Integer pageNum, @RequestParam(defaultValue = "10") Integer pageSize ) {
+    public String getUserList(@ApiIgnore ModelMap map, @RequestParam(defaultValue = "1") Integer pageNum, @RequestParam(defaultValue = "10") Integer pageSize) {
 
         User user = new User();
         PageInfo<User> pageInfo = userService.getUserList(user, pageNum, pageSize);
@@ -60,7 +60,7 @@ public class UserController {
 
     @ApiOperation(value = "查询所有用户新分页")
     @RequestMapping(value = "/getUserList2", method = RequestMethod.GET, produces = "application/json;charset=UTF-8")
-    public String getUserList2(@ApiIgnore ModelMap map, @RequestParam(defaultValue = "1") Integer pageNum, @RequestParam(defaultValue = "10") Integer pageSize ) {
+    public String getUserList2(@ApiIgnore ModelMap map, @RequestParam(defaultValue = "1") Integer pageNum, @RequestParam(defaultValue = "10") Integer pageSize) {
 
         User user = new User();
         PageInfo<User> pageInfo = userService.getUserList(user, pageNum, pageSize);
@@ -80,6 +80,30 @@ public class UserController {
         map.addAttribute("isLastPage", pageInfo.isIsLastPage());
 
         return "userList2";
+    }
+
+
+    @ApiOperation(value = "跳转到layui数据表格")
+    @RequestMapping(value = "/getUserList3", method = RequestMethod.GET, produces = "application/json;charset=UTF-8")
+    public String getUserList3() {
+        return "userList3";
+    }
+
+    @ApiOperation(value = "查询所有用户新分页")
+    @RequestMapping(value = "/getUserListByLayui", method = RequestMethod.GET, produces = "application/json;charset=UTF-8")
+    @ResponseBody
+    public Map<String, Object> getUserListByLayui(@RequestParam(defaultValue = "1") Integer page, @RequestParam(defaultValue = "10") Integer limit) {
+
+        log.info("### getUserListByLayui input, page:{}, limit:{}", page, limit);
+        User user = new User();
+        PageInfo<User> pageInfo = userService.getUserList(user, page, limit);
+
+        Map<String, Object> resultMap = new HashMap<>();
+        resultMap.put("data", pageInfo.getList());
+        resultMap.put("count", pageInfo.getTotal());
+        resultMap.put("code", 0);
+
+        return resultMap;
     }
 
 

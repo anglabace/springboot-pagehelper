@@ -205,15 +205,20 @@
 
     <build>
         <resources>
+            <!-- 解决layui图标不显示问题 -->
             <resource>
                 <directory>src/main/resources</directory>
                 <filtering>true</filtering>
-                <!--<includes>-->
-                <!--<include>*.*</include>-->
-                <!--</includes>-->
                 <excludes>
-                    <exclude>*.p12</exclude>
+                    <exclude>static/layui/**/*</exclude>
                 </excludes>
+            </resource>
+            <resource>
+                <directory>src/main/resources</directory>
+                <filtering>false</filtering>
+                <includes>
+                    <include>static/layui/**/*</include>
+                </includes>
             </resource>
         </resources>
         <pluginManagement>

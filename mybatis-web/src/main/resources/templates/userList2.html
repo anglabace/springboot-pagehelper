@@ -43,88 +43,69 @@
         </tbody>
     </table>
 
-    <nav>
-        <!-- 处理页数大于7 的情况 -->
-        <ul class="pagination" data-th-if="${totalPages gt 7}" >
-            <!-- 上一页 -->
-            <li class="page-item" data-th-classappend="*{first} ? 'disabled' : ''">
-                <a href="javascript:void(0);" class="page-link" data-th-attr="pageIndex=${pageNum} - 1" aria-label="Previous">
-                    <span aria-hidden="true">«</span>
-                </a>
-            </li>
-
-            <!-- 首页 -->
-            <li class="page-item" data-th-classappend="${(pageNum + 1) eq 1} ? 'active' : ''" >
-                <a href="javascript:void(0);" class="page-link" data-th-attr="pageIndex=0">1</a>
-            </li>
-
-
-            <!-- 当前页面小于等于4 -->
-            <li class="page-item" data-th-if="${(pageNum + 1) le 4}" data-th-each="i : ${#numbers.sequence(2,5)}"
-                data-th-classappend="${(pageNum + 1) eq i} ? 'active' : ''" >
-                <a class="page-link" href="javascript:void(0);" data-th-attr="pageIndex=${i} - 1">
-                    <span data-th-text="${i}"></span>
-                </a>
-            </li>
-
-            <li class="page-item disabled" data-th-if="${(pageNum + 1) le 4}">
-                <a href="javascript:void(0);" class="page-link">
-                    <span aria-hidden="true">...</span>
-                </a>
-            </li>
-
-            <!-- 最后一页与当前页面之差，小于等于3 -->
-            <li class="page-item disabled" data-th-if="${(totalPages-(pageNum + 1)) le 3}">
-                <a href="javascript:void(0);" class="page-link">
-                    <span aria-hidden="true">...</span>
-                </a>
-            </li>
-            <li class="page-item" data-th-if="${(totalPages-(pageNum + 1)) le 3}" data-th-each="i : ${#numbers.sequence(totalPages-4, totalPages-1)}"
-                data-th-classappend="${(pageNum + 1) eq i} ? 'active' : ''" >
-                <a class="page-link" href="javascript:void(0);" data-th-attr="pageIndex=${i} - 1">
-                    <span data-th-text="${i}"></span>
-                </a>
-            </li>
-
-            <!-- 最后一页与当前页面之差大于3，且  当前页面大于4-->
-
-            <li class="page-item disabled" data-th-if="${((pageNum + 1) gt 4) && ((totalPages-(pageNum + 1)) gt 3 )}">
-                <a href="javascript:void(0);" class="page-link">
-                    <span aria-hidden="true">...</span>
-                </a>
-            </li>
-            <li class="page-item" data-th-if="${((pageNum + 1) gt 4) && ((totalPages-(pageNum + 1)) gt 3 )}" >
-                <a href="javascript:void(0);" class="page-link" data-th-attr="pageIndex=${pageNum}">[[${pageNum}]]</a>
-            </li>
-            <li class="page-item active" data-th-if="${((pageNum + 1) gt 4) && ((totalPages-(pageNum + 1)) gt 3 )}">
-                <a href="javascript:void(0);" class="page-link" data-th-attr="pageIndex=${pageNum} + 1">[[${pageNum + 1}]]</a>
-            </li>
-            <li class="page-item" data-th-if="${((pageNum + 1) gt 4) && ((totalPages-(pageNum + 1)) gt 3 )}">
-                <a href="javascript:void(0);" class="page-link" data-th-attr="pageIndex=${pageNum} + 2">[[${pageNum + 2}]]</a>
-            </li>
-
-            <li class="page-item disabled"  data-th-if="${((pageNum + 1) gt 4) && ((totalPages-(pageNum + 1)) gt 3 )}">
-                <a href="javascript:void(0);" class="page-link">
-                    <span aria-hidden="true">...</span>
-                </a>
-            </li>
-
-            <!-- 最后一页 -->
-            <li class="page-item" data-th-classappend="${(pageNum + 1) eq totalPages} ? 'active' : ''" >
-                <a href="javascript:void(0);" class="page-link" data-th-attr="pageIndex=${totalPages} - 1">[[${totalPages}]]</a>
-            </li>
-
-            <!-- 下一页 -->
-            <li class="page-item" data-th-classappend="*{last} ? 'disabled' : ''">
-                <a href="javascript:void(0);" class="page-link" data-th-attr="pageIndex=${pageNum} + 1" aria-label="Next">
-                    <span aria-hidden="true">»</span>
-                </a>
-            </li>
-        </ul>
-    </nav>
+    <!--分页-->
+    <div th:replace="page"></div>
+    <!--/分页-->
 
     <div><a class="btn btn-primary" href="/userManager/create" role="button">新增用户</a></div>
 </div>
 
+<script>
+    $(function () {
+        // 获取评论列表
+        function getComment(postId, pageIndex) {
+            // var _ctx = $("meta[name='ctx']").attr("content");
+            // // 获取 CSRF Token
+            // var token = $("meta[name='_csrf']").attr("content");
+            // var header = $("meta[name='_csrf_header']").attr("content");
+            $.ajax({
+                //url: _ctx + '/comments',
+                uro : "/userManager/getUserList2",
+                type: 'GET',
+                data: {
+                    "async": true,
+                    "pageNum":  pageIndex,
+                    "pageSize" : 10
+                    //"postId": postId,
+                    //"pageIndex": pageIndex,
+                    //"order": order
+                },
+                beforeSend: function (request) {
+                    //request.setRequestHeader(header, token); // 添加  CSRF Token
+                },
+                success: function (data) {
+                    //$("#comment-wrapper").html(data);
+                    alert(data)
+                },
+                error: function () {
+                    //layer.msg("出现错误，请尝试刷新页面!", {icon: 2, anim: 6});
+                }
+            });
+        };
+
+        /*//跳转到指定的页号
+        $(document).on('keydown', '.jump-page-size', function (event) {
+            var max = parseInt($(this).attr("max"));
+            var pageIndex = parseInt($(this).val());
+            var order = $('.paging-box').attr('data-order');
+            if (event.keyCode == "13") {//keyCode=13是回车键
+                if (pageIndex == "" || pageIndex == null) {
+                    return false;
+                }
+                if (!/^\d+$/.test(pageIndex)) {
+                    pageIndex = 1;
+                }
+                if (pageIndex < 1) {
+                    pageIndex = 1;
+                }
+                if (pageIndex > max) {
+                    pageIndex = max;
+                }
+                getComment(postId, pageIndex, order);
+            }
+        })
+        getComment(postId, 1, "new");*/
+    })
+</script>
 </body>
 </html>
