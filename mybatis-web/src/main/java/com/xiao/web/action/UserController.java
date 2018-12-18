@@ -58,6 +58,30 @@ public class UserController {
         return "userList";
     }
 
+    @ApiOperation(value = "查询所有用户新分页")
+    @RequestMapping(value = "/getUserList2", method = RequestMethod.GET, produces = "application/json;charset=UTF-8")
+    public String getUserList2(@ApiIgnore ModelMap map, @RequestParam(defaultValue = "1") Integer pageNum, @RequestParam(defaultValue = "10") Integer pageSize ) {
+
+        User user = new User();
+        PageInfo<User> pageInfo = userService.getUserList(user, pageNum, pageSize);
+        pageInfo.getList().stream().forEach(user1 -> System.out.println(user1));
+
+        map.addAttribute("userList", pageInfo.getList());
+
+        //获得当前页
+        map.addAttribute("pageNum", pageInfo.getPageNum());
+        //获得一页显示的条数
+        map.addAttribute("pageSize", pageInfo.getPageSize());
+        //是否是第一页
+        map.addAttribute("isFirstPage", pageInfo.isIsFirstPage());
+        //获得总页数
+        map.addAttribute("totalPages", pageInfo.getPages());
+        //是否是最后一页
+        map.addAttribute("isLastPage", pageInfo.isIsLastPage());
+
+        return "userList2";
+    }
+
 
     @ApiOperation(value = "添加用户")
     @RequestMapping(value = "/addUser", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")

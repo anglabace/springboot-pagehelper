@@ -36,7 +36,6 @@
                 and sex = #{sex,jdbcType=INTEGER}
             </if>
         </where>
-        order by birth_day desc
     </select>
 
 </mapper>
